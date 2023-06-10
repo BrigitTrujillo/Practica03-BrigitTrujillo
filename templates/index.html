@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brigit-Crud</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/estilo.css">
+</head>
+<body>
+
+  <ul class="nav justify-content-center  bg-primary">
+    <div class="brand">
+      <img src="../static/img/vectores/TFB.jpg" alt="" class="img1">
+    </div>
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="http://127.0.0.1:5000" style="color: rgb(255, 255, 255);">Bienvenida</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="http://127.0.0.1:5000/estudiantes" style="color: rgb(255, 255, 255);">Estudiantes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="http://127.0.0.1:5000/estudiantes" style="color: rgb(255, 255, 255);">Agregar</a>
+    </li>
+   
+  </ul>
+    
+    
+<div class="container-fluid">
+<h1 class="text-center alert alert-warning" style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Lista de Estudiantes</h1><br>
+        <div class="row">
+            <div class="col-sm-2"></div>
+
+            <!-- content goes here -->
+            <div class="col-sm-8">
+<h2 >Tabla de Estudiantes <button class="btn btn-primary float-right" data-toggle="modal" data-target="#myModal">Añadir Estudiante +</button></h2>
+
+{%with messages = get_flashed_messages()%}
+{%if messages%}
+{% for message in messages %}
+<div class="alert alert-success alert-dismissable" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{message}}
+</div>
+{%endfor%}
+{%endif%}
+{%endwith%}
+
+
+
+    <!-- Enter New Student Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+   
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary" style="align-content: center;">Agregar nuevo estuiante + </h5>    
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  
+
+                <div class="modal-body">
+                    
+                    <form action="{{ url_for('insert')}}" method="POST"  enctype="multipart/form-data">
+                        <div class="form-group">
+                          <label>Nombre</label>
+                          <input type="text" name="nombre" class="form-control" id="exampleFormControlInput1" placeholder="Enter nombre">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Edad</label>
+                            <input type="number" name="edad" class="form-control" id="exampleFormControlInput1" placeholder="Enter edad">
+                        </div>
+
+                        <div class="form-group">
+                            <label>DNI</label>
+                            <input name="dni" type="number" class="form-control" id="exampleFormControlInput1" placeholder="Enter dni">
+                          </div>
+
+                        <div class="form-group">
+                            <label>Telefono</label>
+                            <input name="telefono" type="number" class="form-control" id="exampleFormControlInput1" placeholder="Enter telefono">
+                          </div>
+
+                          <div class="form-group">
+                            <label>Grado Academico</label>
+                            <input name="grado" type="number" class="form-control" id="exampleFormControlInput1" placeholder="Enter Grado Academico">
+                          </div>
+
+                        
+                        <div class="form-group">
+                            <label>Imagen</label>
+                            <input type="file" name="imagen" class="form-control-file">
+                          </div>
+
+                          <button type="submit" class="btn btn-primary mb-2">Guardar</button>
+                     
+                      </form>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+<table class="table table-bordered border-primary">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Edad</th>
+            <th scope="col">DNI</th>
+            <th scope="col">Telefono</th>
+            <th scope="col">Grado Academico</th>
+            <th scope="col">Imagen</th>
+            <th scope="col">Aciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in estudiantes %}
+        <tr>
+            <td>{{ row._id }}</td>
+            <td>{{ row.nombre }}</td>
+            <td>{{ row.edad }}</td>
+            <td>{{ row.dni }}</td>
+            <td>{{ row.telefono }}</td>
+            <td>{{ row.grado }}</td>
+            <td>
+                {% if row.imagen_url %}
+                <img src="{{ url_for('static', filename=row.imagen_url) }}" alt="Imagen" style="max-width: 100px; max-height: 100px;">
+
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>
+                <a href="/update/{{ row._id }}" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modaledit{{ row._id }}">Editar</a><br><br>
+                <a href="/delete/{{ row._id }}" onclick="return confirm('Quieres eliminar ?')" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+
+
+
+
+    
+        <!-- Enter New Student Modal -->
+        <div id="modaledit{{row._id}}" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+       
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary" style="align-content: center;">Editar Producto</h5>    
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      
+    
+                    <div class="modal-body">
+                        
+                        <form action="{{ url_for('update')}}" method="POST"  enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="{{row.0}}">
+                            <div class="form-group">
+                              <label>Nombre</label>
+                              <input value="{{row.nombre}}" type="nombre" name="nombre" class="form-control" id="exampleFormControlInput1" placeholder="Enter nombre">
+                            </div>
+    
+                            <div class="form-group">
+                                <label>edad</label>
+                                <input value="{{row.edad}}" type="edad" name="edad" class="form-control" id="exampleFormControlInput1" placeholder="Enter descripcion">
+                            </div>
+    
+                            <div class="form-group">
+                                <label>dni</label>
+                                <input value="{{row.dni}}" name="dni" type="dni" class="form-control" id="exampleFormControlInput1" placeholder="Enter precio">
+                              </div>
+
+
+                            <div class="form-group">
+                                <label>telefono</label>
+                                <input value="{{row.telefono}}" name="telefono" type="telefono" class="form-control" id="exampleFormControlInput1" placeholder="Enter stock">
+                              </div>
+
+                            <div class="form-group">
+                                <label>Grado</label>
+                                <input value="{{row.grado}}" name="grado" type="grado" class="form-control" id="exampleFormControlInput1" placeholder="Enter stock">
+                              </div>
+
+                              <div class="form-group">
+                                <label>Imagen</label>
+                                <input type="file" name="imagen" class="form-control-file">
+                              </div>
+                              <button type="submit" class="btn btn-success mb-2">Editar</button>
+                         
+                          </form>
+    
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    
+    
+     
+
+
+
+
+        {% endfor %}
+    </tbody>
+
+</table>
+            </div>
+            <!-- Content ends here-->
+
+
+            <div class="col-sm-2"></div>
+
+        </div>
+    </div>
+
+ <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    
+</body>
+</html>

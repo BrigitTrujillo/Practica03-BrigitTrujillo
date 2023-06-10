@@ -1,0 +1,21 @@
+.img-fluid {
+    max-height: 380px;
+    width: 100%;
+  }
+  
+
+
+.btn1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    width: 100%;
+
+  }
+
+
+  
+.table {
+    background-color: #cecfcf; /* Color de fondo deseado */
+  }
